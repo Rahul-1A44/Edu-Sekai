@@ -368,3 +368,5 @@ Proprietary - All rights reserved
 
 **Last Updated:** January 2026  
 **Architecture Version:** 2.0 (Tenant-Scoped RBAC)
+
+# Edu-Sekai
