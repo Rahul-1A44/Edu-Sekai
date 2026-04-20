@@ -27,13 +27,13 @@ while maintaining a centralized identity and billing system.
 
 | Tenant-Specific Login |
 |---|
-| ![Login](docs/screenshots/login.png) |
+| ![Login](docs/screenshots/Login.png) |
 
 ### Administrative Dashboard & LMS
 
 | Student Directory | Study Materials |
 |---|---|
-| ![Students](docs/screenshots/student-directory.png) | ![Materials](docs/screenshots/study-materials.png) |
+| ![Students](docs/screenshots/Student-Directory.png) | ![Materials](docs/screenshots/Study-Materials.png) |
 
 ### Role-Based Access Control
 
