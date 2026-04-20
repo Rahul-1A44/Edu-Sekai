@@ -1,117 +1,118 @@
-# EDU Sekai: Multi-Tenant School Management System
+# EDU Sekai — Multi-Tenant School Management SaaS
 
-EDU Sekai is a comprehensive SaaS platform for educational institutions, built using schema-based multi-tenancy to provide complete data isolation while maintaining a centralized identity and billing system.
+![Django](https://img.shields.io/badge/Django-REST_Framework-green)
+![Next.js](https://img.shields.io/badge/Next.js-TypeScript-black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Schema_Isolation-blue)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
 
----
+EDU Sekai is a comprehensive SaaS platform for educational institutions, 
+built using schema-based multi-tenancy to provide complete data isolation 
+while maintaining a centralized identity and billing system.
 
-## Project Overview
-
-This repository contains three main components:
-
-### 1. Backend (Django REST Framework)
-**Location:** `./backend`  
-**Port:** `http://localhost:8000`  
-**Purpose:** Centralized API server, identity provider, and multi-tenant schema orchestrator.
-
-### 2. SaaS Frontend (Next.js)
-**Location:** `./frontend`  
-**Port:** `http://localhost:3000`  
-**Purpose:** Public-facing platform for marketing, registration, and payment processing.
-
-### 3. Tenant Dashboard (Next.js)
-**Location:** `./tenant_frontend`  
-**Port:** `http://[school].localhost:3555`  
-**Purpose:** School-specific management interface for daily operations and LMS.
+> **Why I built this:** Managing multiple schools on a shared database 
+> is a common but unsolved problem for EdTech startups in Nepal. 
+> I wanted to design a system where each institution's data is physically 
+> isolated at the database level — not just filtered by rows — 
+> to guarantee security and enable true horizontal scaling.
 
 ---
 
-## 📸 Screenshots & Demo
+## 📸 Screenshots
 
 ### Onboarding & Authentication
-The platform features a dedicated SaaS landing page for school onboarding, a seamless institution registration flow, and a secure, subdomain-aware login system.
 
 | SaaS Landing Page | Institution Registration |
-| :---: | :---: |
-| <img width="100%" alt="Landing Page" src="https://github.com/user-attachments/assets/93bbf2ef-a16f-4642-a40c-2f8783a55089" /> | <img width="100%" alt="Registration" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" /> |
+|---|---|
+| ![Landing](docs/screenshots/landing-page.png) | ![Registration](docs/screenshots/registration.png) |
 
-| User Login (Tenant Specific) |
-| :---: |
-| <img width="60%" alt="Login" src="https://github.com/user-attachments/assets/4261d173-578f-4296-8a69-7b3e98b37cfa" /> |
+| Tenant-Specific Login |
+|---|
+| ![Login](docs/screenshots/login.png) |
 
 ### Administrative Dashboard & LMS
-School administrators can manage the entire institution, while instructors and students interact through a modular LMS.
 
 | Student Directory | Study Materials |
-| :---: | :---: |
-| <img width="100%" alt="Student Directory" src="https://github.com/user-attachments/assets/eaedff8c-31a1-41c5-8cdb-f9a30ffd81c4" /> | <img width="100%" alt="Study Materials" src="https://github.com/user-attachments/assets/2743a093-3caf-4d21-96e4-fe2d760afdf2" /> |
+|---|---|
+| ![Students](docs/screenshots/student-directory.png) | ![Materials](docs/screenshots/study-materials.png) |
 
-### Advanced Access Control (RBAC)
-Detailed permission management allows owners to toggle specific capabilities for staff and students within their unique schema.
+### Role-Based Access Control
 
 | Role Management | Permission Configuration |
-| :---: | :---: |
-| <img width="100%" alt="Role Management" src="https://github.com/user-attachments/assets/c8d7bf41-0423-441f-b0cb-64f162c6c6e3" /> | <img width="100%" alt="Permissions" src="https://github.com/user-attachments/assets/d7f3f1b2-6d5a-40df-9798-403c4c203bfe" /> |
+|---|---|
+| ![Roles](docs/screenshots/role-management.png) | ![Permissions](docs/screenshots/permissions.png) |
 
 ---
 
-## Core Architecture Concepts
+## Architecture Overview
+
+### Three Components
+
+| Component | Tech | Purpose |
+|---|---|---|
+| Backend | Django REST Framework | API server, identity provider, tenant orchestrator |
+| SaaS Frontend | Next.js | School onboarding, registration, eSewa payments |
+| Tenant Dashboard | Next.js | Per-school LMS, student/staff management |
 
 ### Multi-Tenancy Strategy
-The system uses **schema-based isolation** where each school's data lives in a completely separate PostgreSQL schema. This provides stronger isolation than row-level filtering approaches.
+Each school's data lives in a completely separate **PostgreSQL schema** 
+(e.g., `school_oxford`, `school_cambridge`). This is stronger than 
+row-level filtering — queries are physically scoped per tenant via 
+`search_path` on every request.
 
 ### The Soft-Link Pattern
-**The Challenge:** PostgreSQL Foreign Keys cannot span schemas. A Foreign Key from a tenant table to the public `User` table would fail.
+PostgreSQL Foreign Keys cannot span schemas. Instead of FK constraints, 
+tenant profiles store `user_id` as a plain UUID referencing the public 
+schema — maintained through Django signals, not database constraints. 
+This enables horizontal sharding in future.
 
-**The Solution:** Instead of database-level Foreign Keys, we use **UUID Soft Links**. Tenant profiles store `user_id` as a UUID referencing the public schema, maintained through application logic.
-
-### Username System
-1. **Local Username:** School-specific (e.g., `johnprasaddoe`).
-2. **Global Username:** System-wide unique ID (e.g., `johnprasaddoe_a1b2c3`) stored in the public schema for authentication.
+### Two-Tier Username System
+- **Local username**: School-specific (e.g., `johnprasaddoe`) — unique per school
+- **Global username**: System-wide (e.g., `johnprasaddoe_a1b2c3`) — unique platform-wide
 
 ---
 
-## Getting Started
+## Security Highlights
 
-### Prerequisites
-* Docker and Docker Compose
-* Node.js 18+
-* PostgreSQL 15+ (handled by Docker)
+- JWT tokens in HttpOnly cookies (XSS-protected)
+- Granular RBAC on every endpoint
+- Schema-level data isolation (no cross-tenant leakage possible)
+- PBKDF2 password hashing
+- All queries via Django ORM (no raw SQL / injection risk)
 
-### Quick Start
+---
 
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/Rahul-1A44/Edu-Sekai](https://github.com/Rahul-1A44/Edu-Sekai)
-   cd Edu-Sekai
-Start the backend
+## Quick Start
 
-Bash
-cd backend
-docker compose up --build
-Start the Frontends In two separate terminals:
+```bash
+# 1. Clone
+git clone https://github.com/Rahul-1A44/Edu-Sekai
+cd Edu-Sekai
 
-Bash
-# For SaaS Landing Page
+# 2. Start backend
+cd backend && docker compose up --build
+
+# 3. Start SaaS frontend
 cd frontend && npm install && npm run dev
 
-# For Tenant Dashboard
+# 4. Start tenant dashboard
 cd tenant_frontend && npm install && npm run dev
-Development Tools
-Database Seeding
-Populate mock data for testing:
+```
 
-Bash
-docker compose exec backend python manage.py populate_test_data --schema=<schema_name>
-Audit & Maintenance
-Check and fix orphaned profiles (UUID soft links):
+Visit `http://localhost:3000` → register a school → 
+access it at `http://yourschool.localhost:3555`
 
-Bash
+---
+
+## Dev Utilities
+
+```bash
+# Generate test data for a school
+docker compose exec backend python manage.py populate_test_data --schema=school_oxford
+
+# Audit and fix broken UUID soft links
 docker compose exec backend python manage.py audit_orphans --fix
-Security & Isolation
-Data Isolation: Hard isolation at the PostgreSQL schema level via search_path.
+```
 
-Authentication: JWT tokens stored in HttpOnly cookies.
+---
 
-Authorization: Granular RBAC checks on every protected endpoint.
-
-Protection: XSS protection, CSRF mitigation, and PBKDF2 hashing.
+nt
