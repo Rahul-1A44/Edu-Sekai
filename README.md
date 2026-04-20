@@ -32,7 +32,8 @@ The platform features a dedicated SaaS landing page for school onboarding and a 
 
 | Institution Registration | User Login |
 | :---: | :---: |
-| ![Registration](screenshots/image_066b3e.png) | ![Login](screenshots/image_066de7.png) |
+ |<img width="989" height="532" alt="image" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" />
+
 
 ### Administrative Dashboard
 School administrators can manage the entire institution, from student directories to granular system roles.
