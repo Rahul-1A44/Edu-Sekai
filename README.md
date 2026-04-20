@@ -27,16 +27,16 @@ This repository contains three main components:
 
 ## 📸 Screenshots & Demo
 
-### Landing & Authentication
-The platform features a dedicated SaaS landing page for school onboarding and a secure, subdomain-aware login system.
+### Onboarding & Authentication
+The platform features a dedicated SaaS landing page for school onboarding, a seamless institution registration flow, and a secure, subdomain-aware login system.
 
-| Institution Registration | User Login |
+| SaaS Landing Page | Institution Registration |
 | :---: | :---: |
-| <img width="100%" alt="Registration" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" /> | <img width="100%" alt="Login" src="https://github.com/user-attachments/assets/4261d173-578f-4296-8a69-7b3e98b37cfa" /> |
+| <img width="100%" alt="Landing Page" src="https://github.com/user-attachments/assets/93bbf2ef-a16f-4642-a40c-2f8783a55089" /> | <img width="100%" alt="Registration" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" /> |
 
-| SaaS Landing Page | User Login |
-| :---: | :---: |
-| <img width="100%" alt="Landing Page" src="https://github.com/user-attachments/assets/93bbf2ef-a16f-4642-a40c-2f8783a55089" /> | <img width="100%" alt="Login" src="https://github.com/user-attachments/assets/4261d173-578f-4296-8a69-7b3e98b37cfa" /> |
+| User Login (Tenant Specific) |
+| :---: |
+| <img width="60%" alt="Login" src="https://github.com/user-attachments/assets/4261d173-578f-4296-8a69-7b3e98b37cfa" /> |
 
 ### Administrative Dashboard & LMS
 School administrators can manage the entire institution, while instructors and students interact through a modular LMS.
@@ -58,8 +58,6 @@ Detailed permission management allows owners to toggle specific capabilities for
 
 ### Multi-Tenancy Strategy
 The system uses **schema-based isolation** where each school's data lives in a completely separate PostgreSQL schema. This provides stronger isolation than row-level filtering approaches.
-
-
 
 ### The Soft-Link Pattern
 **The Challenge:** PostgreSQL Foreign Keys cannot span schemas. A Foreign Key from a tenant table to the public `User` table would fail.
