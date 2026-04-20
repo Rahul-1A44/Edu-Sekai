@@ -32,7 +32,7 @@ The platform features a dedicated SaaS landing page for school onboarding and a 
 
 | Institution Registration | User Login |
 | :---: | :---: |
-| <img width="100%" alt="Registration" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" /> | <img width="100%" alt="Login" src="https://github.com/user-attachments/assets/45d2a023-7792-49ec-b5d0-9c02c50ee6ab" /> |
+| <img width="100%" alt="Registration" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" /> | <img width="100%" alt="Login" src="https://github.com/user-attachments/assets/4261d173-578f-4296-8a69-7b3e98b37cfa" /> |
 
 ### Administrative Dashboard & LMS
 School administrators can manage the entire institution, while instructors and students interact through a modular LMS.
