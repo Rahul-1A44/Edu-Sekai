@@ -33,7 +33,7 @@ while maintaining a centralized identity and billing system.
 
 | Student Directory | Study Materials |
 |---|---|
-| ![Students](docs/screenshots/Student-Directory.png) | ![Materials](docs/screenshots/Study-Materials.png) |
+| ![Students](docs/screenshots/Study-Directory.png) | ![Materials](docs/screenshots/Student-Materials.jpg) |
 
 ### Role-Based Access Control
 
