@@ -1,3 +1,4 @@
+Markdown
 # EDU Sekai: Multi-Tenant School Management System
 
 EDU Sekai is a comprehensive SaaS platform for educational institutions, built using schema-based multi-tenancy to provide complete data isolation while maintaining a centralized identity and billing system.
@@ -32,91 +33,48 @@ The platform features a dedicated SaaS landing page for school onboarding and a 
 
 | Institution Registration | User Login |
 | :---: | :---: |
- |<img width="989" height="532" alt="image" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" />
+| <img width="100%" alt="Registration" src="https://github.com/user-attachments/assets/016f3761-43f8-4b3f-81cd-e40ee20280fe" /> | <img width="100%" alt="Login" src="https://github.com/user-attachments/assets/45d2a023-7792-49ec-b5d0-9c02c50ee6ab" /> |
 
+### Administrative Dashboard & LMS
+School administrators can manage the entire institution, while instructors and students interact through a modular LMS.
 
-### Administrative Dashboard
-School administrators can manage the entire institution, from student directories to granular system roles.
-
-| Student Directory | Roles & Permissions |
+| Student Directory | Study Materials |
 | :---: | :---: |
-| ![Student Directory](screenshots/image_066e0b.png) | ![Roles](screenshots/image_066e6c.png) |
+| <img width="100%" alt="Student Directory" src="https://github.com/user-attachments/assets/eaedff8c-31a1-41c5-8cdb-f9a30ffd81c4" /> | <img width="100%" alt="Study Materials" src="https://github.com/user-attachments/assets/2743a093-3caf-4d21-96e4-fe2d760afdf2" /> |
 
-### Learning Management System (LMS)
-Each tenant schema includes a full LMS suite for distributing study materials and managing academic assignments.
+### Advanced Access Control (RBAC)
+Detailed permission management allows owners to toggle specific capabilities for staff and students within their unique schema.
 
-| Study Materials | Assignments & Submissions |
+| Role Management | Permission Configuration |
 | :---: | :---: |
-| ![Study Materials](screenshots/image_066e29.jpg) | ![Assignments](screenshots/image_066e4b.png) |
-
-### Advanced Access Control
-Detailed permission management allows owners to toggle specific capabilities for staff and students within their schema.
-
-<p align="center">
-  <img src="screenshots/image_066ea2.png" width="90%" alt="Permissions Detail">
-</p>
+| <img width="100%" alt="Role Management" src="https://github.com/user-attachments/assets/c8d7bf41-0423-441f-b0cb-64f162c6c6e3" /> | <img width="100%" alt="Permissions" src="https://github.com/user-attachments/assets/d7f3f1b2-6d5a-40df-9798-403c4c203bfe" /> |
 
 ---
 
 ## Core Architecture Concepts
 
 ### Multi-Tenancy Strategy
-
 The system uses **schema-based isolation** where each school's data lives in a completely separate PostgreSQL schema. This provides stronger isolation than row-level filtering approaches.
 
-**Two Schema Types:**
 
-1. **Public Schema** - Shared across all tenants
-   - User authentication credentials
-   - Organization metadata and billing
-   - Domain routing tables
-   - Payment transaction records
-
-2. **Tenant Schemas** - One per school (e.g., `school_oxford`, `school_medhavi`)
-   - Student academic records
-   - Staff employment data
-   - Roles and permissions
-   - Guardian information
-   - All school-specific operational data
 
 ### The Soft-Link Pattern
+**The Challenge:** PostgreSQL Foreign Keys cannot span schemas. A Foreign Key from a tenant table to the public `User` table would fail.
 
-**The Challenge:**
-Traditional Django uses Foreign Keys to link tables. However, PostgreSQL Foreign Keys cannot span schemas. A Foreign Key from a tenant table to the public `User` table would fail.
-
-**The Solution:**
-Instead of database-level Foreign Keys, we use **UUID Soft Links**:
-- Tenant profiles store `user_id` as a plain UUID field
-- This UUID references a `User.id` in the public schema
-- The relationship is maintained through application logic, not database constraints.
+**The Solution:** Instead of database-level Foreign Keys, we use **UUID Soft Links**. Tenant profiles store `user_id` as a UUID referencing the public schema, maintained through application logic.
 
 ### Username System
-
-Users need intuitive usernames within their school context, but the system must ensure global uniqueness across all schools.
-
-**Two-Tier Username Approach:**
-
-1. **Local Username** (School-Specific)
-   - Format: `firstnamemiddlenamelastname` (e.g., `johnprasaddoe`)
-   - Used for login within a specific school context.
-
-2. **Global Username** (System-Wide)
-   - Format: `localusername_randomhex` (e.g., `johnprasaddoe_a1b2c3`)
-   - Stored in the public `User` table for global uniqueness.
-
-### Role-Based Access Control (RBAC)
-
-**Tenant-Scoped Permissions:**
-As of January 2026, roles and permissions are stored in each tenant's schema rather than globally. This provides complete customization flexibility. Each school receives a replicated set of system roles (Owner, Admin, Teacher, Student) which can then be customized.
+1. **Local Username:** School-specific (e.g., `johnprasaddoe`).
+2. **Global Username:** System-wide unique ID (e.g., `johnprasaddoe_a1b2c3`) stored in the public schema for authentication.
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
-- Docker and Docker Compose
-- Node.js 18+
-- PostgreSQL 15+ (handled by Docker)
+* Docker and Docker Compose
+* Node.js 18+
+* PostgreSQL 15+ (handled by Docker)
 
 ### Quick Start
 
@@ -130,43 +88,30 @@ Bash
 cd backend
 docker compose up --build
 Start the Frontends
+In two separate terminals:
 
-Run npm install && npm run dev in both ./frontend and ./tenant_frontend.
+Bash
+# For SaaS Landing Page
+cd frontend && npm install && npm run dev
 
+# For Tenant Dashboard
+cd tenant_frontend && npm install && npm run dev
 Development Tools
 Database Seeding
-Populate Mock Data:
+Populate mock data for testing:
 
 Bash
 docker compose exec backend python manage.py populate_test_data --schema=<schema_name>
-Uses Faker to generate comprehensive test datasets for a specific tenant.
-
 Audit & Maintenance
-Check for orphaned profiles:
+Check and fix orphaned profiles (UUID soft links):
 
 Bash
 docker compose exec backend python manage.py audit_orphans --fix
-Ensures referential integrity across schemas by scanning for broken UUID soft links.
+Security & Isolation
+Data Isolation: Hard isolation at the PostgreSQL schema level via search_path.
 
-Data Isolation Guarantees
-Schema-Level Separation:
-
-Each school's tables exist in a separate PostgreSQL schema.
-
-Database connection sets search_path per request based on subdomain.
-
-Example: oxford.localhost sets search_path to school_oxford, physically preventing access to other tenants.
-
-Project Structure
-EDU Sekai/
-├── backend/            # Django API + Multi-Tenant Logic
-├── frontend/           # SaaS Marketing + Registration
-└── tenant_frontend/    # School Management Dashboard
-Security Highlights
 Authentication: JWT tokens stored in HttpOnly cookies.
 
-Authorization: Granular RBAC checks on every endpoint.
+Authorization: Granular RBAC checks on every protected endpoint.
 
-Data Isolation: Hard isolation at the PostgreSQL schema level.
-
-Protection: XSS protection, CSRF mitigation, and PBKDF2 hashing.
+Protection: XSS protection, CSRF mitigation, and PBKDF2 hashin
