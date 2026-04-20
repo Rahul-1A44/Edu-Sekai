@@ -1,4 +1,3 @@
-Markdown
 # EDU Sekai: Multi-Tenant School Management System
 
 EDU Sekai is a comprehensive SaaS platform for educational institutions, built using schema-based multi-tenancy to provide complete data isolation while maintaining a centralized identity and billing system.
@@ -87,8 +86,7 @@ Start the backend
 Bash
 cd backend
 docker compose up --build
-Start the Frontends
-In two separate terminals:
+Start the Frontends In two separate terminals:
 
 Bash
 # For SaaS Landing Page
@@ -114,4 +112,4 @@ Authentication: JWT tokens stored in HttpOnly cookies.
 
 Authorization: Granular RBAC checks on every protected endpoint.
 
-Protection: XSS protection, CSRF mitigation, and PBKDF2 hashin
+Protection: XSS protection, CSRF mitigation, and PBKDF2 hashing.
