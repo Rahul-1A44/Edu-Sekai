@@ -27,7 +27,7 @@ while maintaining a centralized identity and billing system.
 
 | Tenant-Specific Login |
 |---|
-| ![Login](docs/screenshots/Login.png) |
+| ![Login](docs/screenshots/User-Login.png) |
 
 ### Administrative Dashboard & LMS
 
@@ -39,7 +39,7 @@ while maintaining a centralized identity and billing system.
 
 | Role Management | Permission Configuration |
 |---|---|
-| ![Roles](docs/screenshots/role-management.png) | ![Permissions](docs/screenshots/permissions.png) |
+| ![Roles](docs/screenshots/Role-Management.png) | ![Permissions](docs/screenshots/Permission-Configuration.png) |
 
 ---
 
