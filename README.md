@@ -23,7 +23,7 @@ while maintaining a centralized identity and billing system.
 
 | SaaS Landing Page | Institution Registration |
 |---|---|
-| ![Landing](docs/screenshots/landing-page.png) | ![Registration](docs/screenshots/registration.png) |
+| ![Landing](docs/screenshots/SaaS-Landing-Page.png) | ![Registration](docs/screenshots/registration.png) |
 
 | Tenant-Specific Login |
 |---|
